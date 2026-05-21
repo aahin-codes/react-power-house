@@ -1,0 +1,29 @@
+.rounded-pill {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+
+    &:hover {
+        border-color: var(--border2);
+        color: var(--muted2);
+    }
+
+    &.active {
+        background: rgba(124, 106, 255, 0.12);
+        border-color: rgba(124, 106, 255, 0.35);
+        color: var(--accent2);
+    }
+
+    &.small {
+        font-size: 9px;
+        padding: 1px 7px;
+    }
+}

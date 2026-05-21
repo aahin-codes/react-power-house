@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --color-bg: #0e0f13;
+    --color-bg-dim: #0e0f131a;
+    --color-surface: #16181f;
+    --color-border: #2a2d38;
+    --color-text-primary: #e8eaf0;
+    --color-text-muted: #6b7080;
+    --color-accent: #7c6aff;
+    --color-accent-dim: #7c6aff1a;
+    --color-accent-light: #a594ff;
+    --color-green: #3dd68c;
+    --color-amber: #f5a623;
+    --color-red: #ff5f7e;
+    --font-code: 'DM Mono', monospace;
+    --font-sans: 'DM Sans', sans-serif;
+    --font-all: 'Syne', sans-serif;
+    --color-orange-light:rgba(245, 166, 35, 0.19);
+    --color-orange:rgb(245, 166, 35);
+    
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: var(--color-bg);
+    color: var(--color-text-primary);
+    font-family: var(--font-all);
+    font-size: 15px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+}
