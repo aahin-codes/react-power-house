@@ -1,3 +1,5 @@
+@use '../../styles/abstracts/_mixins' as mix;
+
 .feature-card {
 
     background: var(--color-surface);
@@ -22,9 +24,7 @@
         border-right: 1px solid var(--color-border);
 
         >.first-layout {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
+            @include mix.flex(flex-start, space-between);
             margin-bottom: 10px;
 
             svg {
@@ -32,9 +32,7 @@
                 width: 36px;
                 height: 36px;
                 border-radius: 8px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
+                @include mix.flex(center, center);
                 font-size: 17px;
             }
 
@@ -47,33 +45,23 @@
                 text-transform: uppercase;
 
                 &.green {
-                    background: rgba(61, 214, 140, 0.082);
-                    border: 1px solid rgba(61, 214, 140, 0.208);
-                    color: rgb(61, 214, 140);
+                    @include mix.pill-color(green);
                 }
 
                 &.blue {
-                    background: rgba(56, 189, 248, 0.082);
-                    border: 1px solid rgba(56, 189, 248, 0.208);
-                    color: rgb(56, 189, 248);
+                    @include mix.pill-color(blue);
                 }
 
                 &.purple {
-                    background: rgba(124, 106, 255, 0.07);
-                    border: 1px solid rgba(124, 106, 255, 0.19);
-                    color: rgb(124, 106, 255);
+                    @include mix.pill-color(purple);
                 }
 
                 &.orange {
-                    background: rgba(245, 166, 35, 0.07);
-                    border: 1px solid rgba(245, 166, 35, 0.19);
-                    color: rgb(245, 166, 35);
+                    @include mix.pill-color(orange);
                 }
 
                 &.red {
-                    background: rgba(255, 95, 126, 0.07);
-                    border: 1px solid rgba(255, 95, 126, 0.19);
-                    color: rgb(255, 95, 126);
+                    @include mix.pill-color(red);
                 }
             }
         }
@@ -111,10 +99,7 @@
         min-width: 0;
         padding: 24px;
         background: var(--color-bg);
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        flex-wrap: wrap;
+        @include mix.flex-dir-wrap(column,stretch,center);
         border-radius: 0px 9px 9px 0px;
 
         >h2 {
@@ -125,9 +110,6 @@
             text-transform: uppercase;
         }
 
-
-
-
     }
 }
 
@@ -135,7 +117,11 @@
     .feature-card {
         grid-template-columns: 1fr;
 
-        >.right-section{
+        >.left-section {
+            border: none;
+        }
+
+        >.right-section {
             border-radius: 9px 9px 9px 9px;
         }
     }

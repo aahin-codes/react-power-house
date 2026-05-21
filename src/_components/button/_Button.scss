@@ -30,7 +30,7 @@ button {
 
         &:hover {
             background: var(--color-accent);
-            color: #fff;
+            color: var(--color-text-primary);
             box-shadow: 0 0 24px var(--color-accent-dim)
         }
     }

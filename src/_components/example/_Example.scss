@@ -1,3 +1,5 @@
+@use "../../styles/abstracts/mixins" as mix;
+
 .example-section {
     margin-top: 20px;
     border: 1px solid var(--color-text-muted);
@@ -10,34 +12,29 @@
     >.header {
         padding: 10px 20px;
         background-color: var(--color-border);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        @include mix.flex(center, space-between);
         border-bottom: 1px solid var(--color-text-muted);
 
         >div {
-            display: flex;
-            align-items: center;
+            @include mix.flex(center, flex-start);
             gap: 10px;
 
             >.dots {
-                display: flex;
-                justify-content: flex-start;
-                align-items: center;
+                @include mix.flex(center, flex-start);
                 gap: 5px;
 
                 >.dot {
                     height: 10px;
                     width: 10px;
                     border-radius: 10px;
-                    background-color: rgb(255, 95, 87);
+                    background-color: var(--color-red);
 
                     &:nth-child(2) {
                         background-color: rgb(254, 188, 46);
                     }
 
                     &:last-child {
-                        background-color: rgb(40, 200, 64);
+                        background-color: var(--color-green);
                     }
                 }
             }
@@ -53,10 +50,10 @@
             border: 1px solid var(--color-accent);
             border-radius: 4px;
             font-size: 12px;
-            cursor:pointer;
+            cursor: pointer;
             transition: all .25s ease-in-out;
 
-            &.active{
+            &.active {
                 background-color: var(--color-accent);
                 color: var(--color-text-primary);
             }
@@ -70,4 +67,3 @@
         overflow: auto;
     }
 }
-
