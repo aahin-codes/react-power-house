@@ -1,5 +1,5 @@
 import './_FeaturedCard.scss';
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import type { IconType } from "react-icons";
 import { FaLongArrowAltRight } from "react-icons/fa";
 import { FaReact } from "react-icons/fa";
