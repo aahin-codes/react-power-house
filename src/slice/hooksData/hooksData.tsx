@@ -35,23 +35,43 @@ export const hooksData: HookData[] = [
         },
         example: {
             code: `
-import { useState } from "react";
+// Importing the hooks we need
+import { useState } from 'react';
 
-// fn component 
-function libraryOfAahin(){
-    const [value, setValue] = useState(0); // using initial value as 0
+// Defining our component — a function that returns UI (must start with a capital letter)
+function LibraryOfAahin() {
 
-    // a normal function is used to increase value by one, when user click a button
-    function increaseValueByOne(){
-        console.log(value); //print old value
-        setValue(value+1); //increased value by one
+    // useState(0) creates a state variable called 'value', starting at 0
+    // 'value'    → the current value we can read
+    // 'setValue' → the function we call to update that value
+    const [value, setValue] = useState(0);
+
+    // This function runs every time the button is clicked
+    function increaseValueByOne() {
+
+        // Logs the current value to the browser console (helpful for learning/debugging)
+        console.log(value);
+
+        // Updates the value by 1
+        // We use 'prevValue' (the latest state) instead of 'value' directly
+        // This avoids bugs when multiple updates happen at the same time
+        setValue(prevValue => prevValue + 1);
     }
 
-    return (<div>
-        <button onClick=(increaseValueByOne)>Click!!!</button>
-    </div>)
+    // The UI this component displays on screen
+    return (
+        <div>
+            {/* When the button is clicked, it calls increaseValueByOne */}
+            <button onClick={increaseValueByOne}>Click!!!</button>
 
+            {/* Displays the current value — updates automatically when state changes */}
+            <p>Current Value: {value}</p>
+        </div>
+    );
 }
+
+// Exports this component so other files can import and use it
+export default LibraryOfAahin;
             `,
             language: "jsx"
         },
@@ -71,7 +91,59 @@ function libraryOfAahin(){
             rows: [["cleanup", "function (optional)", "Returned from the effect itself. Runs before the next effect or on unmount."]]
         },
         example: {
-            code: "",
+            code: `
+// Importing the hooks we need
+import { useState, useEffect } from 'react';
+
+// Defining our component (must start with a capital letter)
+function LibraryOfAahin() {
+
+    const [value, setValue] = useState(0);
+
+    // This function runs every time the button is clicked
+    function increaseValueByOne() {
+
+        console.log(value);
+        setValue(prevValue => prevValue + 1);
+
+    }
+
+    // useEffect watches for changes and runs code when they happen
+    // This one watches 'value' — so it runs every time value changes
+    useEffect(() => {
+
+        // This message appears in the console every time React re-renders
+        // due to 'value' changing — great for seeing when re-renders happen
+        console.log("useEffect ran — value is now:", value);
+
+        return () => {
+            console.log("Cleanup ran — value was:", value);
+            // ↑ Notice this logs the OLD value before the new effect runs
+            // This is because the cleanup remembers the value from its own run
+        };
+
+    }, [value]);
+    // ↑ This is the dependency array
+    // → Empty []        means run only once on first load
+    // → [value]         means run every time 'value' changes
+    // → No []           means run on every single render
+
+    // The UI this component shows on screen
+    return (
+        <div>
+            {/* Clicking this button calls increaseValueByOne */}
+            <button onClick={increaseValueByOne}>Click!!!</button>
+
+            {/* Shows the current value — auto updates when state changes */}
+            <p>Current Value: {value}</p>
+        </div>
+    );
+}
+
+// Exports this component so other files can import and use it
+export default LibraryOfAahin;
+
+            `,
             language: "jsx"
         },
         label: "Level 1",
@@ -89,7 +161,81 @@ function libraryOfAahin(){
             rows: [["ref", "object", "A plain object { current: initialValue } that persists for the full lifetime of the component."]]
         },
         example: {
-            code: "",
+            code: `
+// Importing the hooks we need
+import { useState, useEffect, useRef } from 'react';
+
+function LibraryOfAahin() {
+
+    // useState — tracks the current counter value (causes re-renders)
+    const [value, setValue] = useState(0);
+
+    // useRef — tracks how many times the button was clicked
+    // POINT 1: useRef does NOT cause a re-render when it changes
+    // POINT 2: useRef remembers its value between renders
+    // 'renderCount.current' is how you READ and WRITE a ref value
+    const clickCount = useRef(0);
+
+    // useRef — used to directly access the paragraph DOM element
+    // This is the SECOND common use case for useRef (grabbing HTML elements)
+    const paragraphRef = useRef(null);
+    // ↑ starts as null — React will fill it in when the component loads
+
+    function increaseValueByOne() {
+
+        // Updating the ref value directly — no setter function needed!
+        // Unlike useState, we just directly change '.current'
+        clickCount.current = clickCount.current + 1;
+
+        // Logging both so beginners can see the difference
+        console.log("Button clicked:", clickCount.current, "times");
+
+        // Updates state — this WILL cause a re-render
+        setValue(prevValue => prevValue + 1);
+    }
+
+    useEffect(() => {
+
+        // Accessing the real DOM element using the ref
+        // Just like document.querySelector() but the React way
+        console.log("Paragraph DOM element:", paragraphRef.current);
+
+        // Directly changing the DOM element's style using the ref
+        // This highlights the paragraph briefly when value changes
+        paragraphRef.current.style.color = "green";
+
+        // CLEANUP — resets the color before next effect runs
+        return () => {
+            console.log("Cleanup — resetting paragraph color");
+            paragraphRef.current.style.color = "black";
+        };
+
+    }, [value]);
+    // ↑ runs every time value changes
+
+    return (
+        <div>
+            {/* Button triggers the counter increase */}
+            <button onClick={increaseValueByOne}>Click!!!</button>
+
+            {/* 'ref={paragraphRef}' connects this element to our useRef */}
+            {/* Now paragraphRef.current points directly to this <p> tag */}
+            <p ref={paragraphRef}>Current Value: {value}</p>
+
+            {/* 
+                ⚠️ Important: clickCount.current is NOT shown here as state
+                If you display it here, it won't auto-update on screen
+                because useRef doesn't trigger re-renders!
+                It only updates visually when useState causes a re-render
+                
+            */}
+            <p>Button clicked: {clickCount.current} times</p>
+        </div>
+    );
+}
+
+export default LibraryOfAahin;
+            `,
             language: "jsx"
         },
         label: "Level 1",
@@ -108,7 +254,102 @@ function libraryOfAahin(){
             rows: [["cachedValue", "any", "The memoized result. Same reference across renders until dependencies change."]]
         },
         example: {
-            code: "",
+            code: `
+// Importing the hooks we need
+import { useState, useEffect, useRef, useMemo } from 'react';
+
+function LibraryOfAahin() {
+
+    // useState — tracks the counter value (causes re-renders)
+    const [value, setValue] = useState(0);
+
+    // useState — tracks a separate input (to show useMemo in action)
+    const [name, setName] = useState("");
+
+    // useRef — tracks how many times heavy calculation actually ran
+    // Remember: useRef is silent — won't cause re-renders
+    const calculationCount = useRef(0);
+
+    // useMemo — remembers the RESULT of a calculation
+    // Only re-calculates when 'value' changes
+    // If 'name' changes — this is SKIPPED, returns saved result instead
+    const heavyCalculation = useMemo(() => {
+
+        // Tracking how many times this actually runs
+        calculationCount.current = calculationCount.current + 1;
+        console.log("Heavy calculation ran!", calculationCount.current, "times");
+
+        // Simulating a heavy/slow calculation using the value
+        // Imagine this is sorting 10000 items or processing big data
+        let result = 0;
+        for (let i = 0; i <= value * 1000; i++) {
+            result += i;
+        }
+
+        // This result is REMEMBERED (memoized) until 'value' changes
+        return result;
+
+    }, [value]);
+    // ↑ Dependency array — only re-calculate when 'value' changes
+    //   If only 'name' changes, useMemo returns the SAVED result instantly
+
+
+    useEffect(() => {
+
+        // This runs every time value changes
+        console.log("useEffect ran — value is now:", value);
+        console.log("useMemo saved result:", heavyCalculation);
+
+        return () => {
+            console.log("🧹 Cleanup ran — value was:", value);
+        };
+
+    }, [value]);
+
+    return (
+        <div>
+            <h2>useMemo Example</h2>
+
+            {/* TYPE in the input — triggers re-render but NOT the heavy calculation */}
+            {/* Watch the console — heavy calculation won't run when typing! */}
+            <input
+                type="text"
+                value={name}
+                placeholder="Type here — no heavy calc!"
+
+                // onChange updates 'name' state on every keystroke
+                // This causes a re-render BUT useMemo skips the calculation
+                onChange={(e) => setName(e.target.value)}
+            />
+
+            <br /><br />
+
+            {/* Clicking THIS button changes 'value' — triggers the heavy calculation */}
+            <button onClick={() => setValue(prevValue => prevValue + 1)}>
+                Increase Value (triggers calculation)
+            </button>
+
+            <br /><br />
+
+            {/* Shows current value */}
+            <p>Current Value: {value}</p>
+
+            {/* Shows the memoized result — already calculated, just reading it */}
+            <p>Heavy Calculation Result: {heavyCalculation}</p>
+
+            {/* Shows how many times the heavy calculation actually ran */}
+            {/* This is the KEY proof that useMemo is working! */}
+            <p>Calculation ran: {calculationCount.current} times</p>
+
+            {/* Shows current name — updates on every keystroke */}
+            <p>Name: {name}</p>
+
+        </div>
+    );
+}
+
+export default LibraryOfAahin;
+            `,
             language: "jsx"
         },
         label: "Level 1",
@@ -127,7 +368,114 @@ function libraryOfAahin(){
             rows: [["cachedFn", "function", "The memoized function. Same reference across renders until dependencies change."]]
         },
         example: {
-            code: "",
+            code:`
+// Importing the hooks we need
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+
+function LibraryOfAahin() {
+
+    // useState — tracks the counter value (causes re-renders)
+    const [value, setValue] = useState(0);
+
+    // useState — tracks a separate input (to show useCallback in action)
+    const [name, setName] = useState("");
+
+    // useRef — tracks how many times the function was actually recreated
+    // Remember: useRef is silent — won't cause re-renders
+    const functionCreateCount = useRef(0);
+
+    // useCallback — remembers the FUNCTION itself
+    // Only recreates the function when 'value' changes
+    // If 'name' changes — this is SKIPPED, returns saved function instead
+    // This is the KEY difference from useMemo:
+    // useMemo   remembers a RESULT
+    // useCallback remembers a FUNCTION
+    const increaseValueByOne = useCallback(() => {
+
+        // Tracking how many times this function was actually recreated
+        functionCreateCount.current = functionCreateCount.current + 1;
+        console.log("Function recreated!", functionCreateCount.current, "times");
+
+        // Safely increases value by 1 using the previous state
+        setValue(prevValue => prevValue + 1);
+
+    }, []);
+    // Dependency array — empty means this function is created ONCE
+    // and never recreated again, no matter how many re-renders happen
+
+
+    // Without useCallback this function would be recreated on EVERY render
+    // With useCallback it is saved and reused until dependencies change
+    const handleNameChange = useCallback((e) => {
+
+        console.log("handleNameChange called with:", e.target.value);
+
+        // Updates name state on every keystroke
+        setName(e.target.value);
+
+    }, []);
+    // Empty array — this function never needs to be recreated
+    // because it does not depend on any state or prop
+
+
+    useEffect(() => {
+
+        // This runs every time value changes
+        console.log("useEffect ran — value is now:", value);
+
+        return () => {
+            console.log("Cleanup ran — value was:", value);
+        };
+
+    }, [value]);
+
+
+    // Simulating a child component receiving the function as a prop
+    // In real apps, useCallback shines when passing functions to child components
+    // Without useCallback — child re-renders every time because function is "new"
+    // With useCallback — child skips re-render because function is "same"
+    console.log("Parent component rendered");
+
+    return (
+        <div>
+            <h2>useCallback Example</h2>
+
+            {/* TYPE in the input — triggers re-render but NOT function recreation */}
+            {/* Watch the console — function recreation count stays the same! */}
+            <input
+                type="text"
+                value={name}
+                placeholder="Type here — no function recreation!"
+
+                // handleNameChange is memoized — same function reference every render
+                onChange={handleNameChange}
+            />
+
+            <br /><br />
+
+            {/* Clicking THIS button calls the memoized increaseValueByOne function */}
+            <button onClick={increaseValueByOne}>
+                Increase Value
+            </button>
+
+            <br /><br />
+
+            {/* Shows current value */}
+            <p>Current Value: {value}</p>
+
+            {/* Shows how many times the function was actually recreated */}
+            {/* This is the KEY proof that useCallback is working! */}
+            <p>Function recreated: {functionCreateCount.current} times</p>
+
+            {/* Shows current name — updates on every keystroke */}
+            <p>Name: {name}</p>
+
+        </div>
+    );
+}
+
+export default LibraryOfAahin;
+            `,
             language: "jsx"
         },
         label: "Level 1",
@@ -146,7 +494,185 @@ function libraryOfAahin(){
             rows: [["state", "any", "The current state value returned by the reducer."], ["dispatch", "function", "A function to send an action object to the reducer and trigger a re-render."]]
         },
         example: {
-            code: "",
+            code:`
+// Importing the hooks we need
+import { useState, useReducer, useEffect, useRef } from 'react';
+
+// ACTION TYPES — plain strings that describe WHAT happened
+// Storing them as constants avoids typos like "INCREMNT" instead of "INCREMENT"
+// Think of these as the names of buttons on a remote control
+const INCREMENT = "INCREMENT";
+const DECREMENT = "DECREMENT";
+const RESET     = "RESET";
+const SET_NAME  = "SET_NAME";
+
+// REDUCER FUNCTION — lives OUTSIDE the component
+// This is a pure function that takes two things:
+// 1. state  — the current state (everything we are tracking)
+// 2. action — an object describing WHAT happened and with WHAT data
+//
+// Think of reducer like a BANK TELLER:
+// You (the component) send a REQUEST (action)
+// The teller (reducer) looks at the request and updates the ACCOUNT (state)
+// You never touch the account directly — the teller handles it
+function reducer(state, action) {
+
+    console.log("Reducer called with action:", action.type);
+    console.log("State before update:", state);
+
+    // switch checks WHAT action was dispatched
+    // each case handles a different action type
+    switch (action.type) {
+
+        case INCREMENT:
+            // Returns a NEW state object with value increased by 1
+            // We spread '...state' to keep everything else the same
+            // and only change what we need to change
+            return {
+                ...state,
+                value: state.value + 1
+            };
+
+        case DECREMENT:
+            // Returns a NEW state object with value decreased by 1
+            // We prevent going below 0 using Math.max
+            return {
+                ...state,
+                value: Math.max(0, state.value - 1)
+            };
+
+        case RESET:
+            // Returns a NEW state object with value back to 0
+            return {
+                ...state,
+                value: 0
+            };
+
+        case SET_NAME:
+            // action.payload carries extra data sent with the action
+            // In this case it carries the new name typed in the input
+            return {
+                ...state,
+                name: action.payload
+            };
+
+        // Always have a default case — returns current state unchanged
+        // This handles any unknown action types safely
+        default:
+            console.log("Unknown action type:", action.type);
+            return state;
+    }
+}
+
+// INITIAL STATE — the starting values for everything we are tracking
+// This is like the opening balance of a bank account
+// Keeping it outside the component makes it easy to find and change
+const initialState = {
+    value: 0,
+    name: ""
+};
+
+function LibraryOfAahin() {
+
+    // useReducer takes two things:
+    // 1. reducer  — the function that handles state updates
+    // 2. initialState — the starting values
+    //
+    // It gives back two things:
+    // 1. state    — the current state object (read from here)
+    // 2. dispatch — the function to send actions (write through here)
+    //
+    // dispatch is like pressing a button on the remote control
+    // reducer is like the TV responding to that button press
+    const [state, dispatch] = useReducer(reducer, initialState);
+
+    // useRef — tracks how many times dispatch was called
+    // Silent tracker — won't cause re-renders
+    const dispatchCount = useRef(0);
+
+    // This function dispatches the INCREMENT action
+    // dispatch sends an ACTION OBJECT to the reducer
+    // action object always has a 'type' — tells reducer what to do
+    function handleIncrement() {
+        dispatchCount.current = dispatchCount.current + 1;
+        console.log("Dispatching INCREMENT — dispatch count:", dispatchCount.current);
+
+        // Sending action to reducer
+        // Reducer sees { type: "INCREMENT" } and handles it
+        dispatch({ type: INCREMENT });
+    }
+
+    function handleDecrement() {
+        dispatchCount.current = dispatchCount.current + 1;
+        console.log("Dispatching DECREMENT — dispatch count:", dispatchCount.current);
+
+        // Sending action to reducer
+        // Reducer sees { type: "DECREMENT" } and handles it
+        dispatch({ type: DECREMENT });
+    }
+
+    function handleReset() {
+        dispatchCount.current = dispatchCount.current + 1;
+        console.log("Dispatching RESET — dispatch count:", dispatchCount.current);
+
+        dispatch({ type: RESET });
+    }
+
+    function handleNameChange(e) {
+        dispatchCount.current = dispatchCount.current + 1;
+        console.log("Dispatching SET_NAME with payload:", e.target.value);
+
+        // This action carries extra data using 'payload'
+        // payload is the standard name for extra data in an action
+        // Reducer sees { type: "SET_NAME", payload: "Aahin" } and handles it
+        dispatch({ type: SET_NAME, payload: e.target.value });
+    }
+
+    useEffect(() => {
+
+        console.log("useEffect ran — full state is now:", state);
+
+        return () => {
+            console.log("Cleanup ran — state was:", state);
+        };
+
+    }, [state]);
+    // Watching the entire state object — runs when anything in state changes
+
+    return (
+        <div>
+            <h2>useReducer Example</h2>
+
+            {/* Input for name — dispatches SET_NAME with payload */}
+            <input
+                type="text"
+                value={state.name}
+                placeholder="Type your name"
+                onChange={handleNameChange}
+            />
+
+            <br /><br />
+
+            {/* Each button dispatches a different action type */}
+            <button onClick={handleIncrement}>Increase Value</button>
+            <button onClick={handleDecrement}>Decrease Value</button>
+            <button onClick={handleReset}>Reset</button>
+
+            <br /><br />
+
+            {/* Reading directly from state object */}
+            <p>Current Value: {state.value}</p>
+            <p>Name: {state.name}</p>
+
+            {/* Proof that dispatch was called — updates when useState causes render */}
+            <p>Total dispatches: {dispatchCount.current}</p>
+
+        </div>
+    );
+}
+
+export default LibraryOfAahin;
+            `,
             language: "jsx"
         },
         label: "Level 1",
