@@ -18,6 +18,7 @@
 
     p {
         margin-top: 10px;
+        @include mix.text-ellipsis(2);
     }
 
     >a {

@@ -45,3 +45,10 @@
   justify-content: $justify;
   flex-wrap: wrap;
 }
+
+@mixin text-ellipsis($vertical-line){
+  display: -webkit-box;
+  -webkit-line-clamp: $vertical-line; /* number of lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

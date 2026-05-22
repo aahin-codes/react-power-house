@@ -23,8 +23,8 @@
         justify-content: center;
         border-radius: 2px;
         padding: 4px;
-        
-        >svg{
+
+        >svg {
             cursor: pointer;
         }
     }
@@ -84,7 +84,7 @@
                 color: var(--color-accent);
                 display: none;
 
-                >svg{
+                >svg {
                     cursor: pointer;
                 }
             }
@@ -115,19 +115,13 @@
                 transition: all 0.15s;
                 border: 1px solid transparent;
 
-                &:hover {
+                &:hover,
+                &.active {
                     background: var(--color-accent);
                     color: var(--color-text-primary);
-                }
-
-                &.active {
-                    background: var(--color-accent-dim);
-                    border-color: var(--color-border);
-                    color: var(--color-accent);
-                    font-weight: 500;
 
                     .dot {
-                        background: var(--color-accent);
+                        background: var(--color-border);
                     }
                 }
 
@@ -135,12 +129,19 @@
                     width: 5px;
                     height: 5px;
                     border-radius: 50%;
-                    // background: var(--color-bg-dim);
                     flex-shrink: 0;
                     transition: background 0.15s;
 
 
                 }
+            }
+        }
+
+        section:nth-child(3) {
+            .hook-item {
+                background: var(--color-border);
+                cursor: not-allowed;
+
             }
         }
     }
@@ -253,6 +254,10 @@
                 align-items: flex-start;
                 flex-wrap: wrap;
                 gap: 20px;
+
+                >.classic-card {
+                    width: calc(100% / 2 - 10px);
+                }
             }
         }
     }
@@ -321,6 +326,7 @@
 
         >main {
             width: 100%;
+
             >.hooks-table {
                 // padding: 20px;
 
@@ -375,6 +381,10 @@
                 >.cards {
                     flex-wrap: wrap;
 
+                    >.classic-card {
+                        width: 100%;
+                        max-width: 100%;
+                    }
                 }
             }
         }

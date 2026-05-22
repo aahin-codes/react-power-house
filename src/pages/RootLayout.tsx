@@ -67,8 +67,8 @@ const RootLayout = () => {
                         <h3>All Hooks</h3>
                         {allHook.map((item: any) => {
                             return (
-                                <div className='hook-item' key={item?.hookName} onClick={() => {
-                                    navigate(`/react-power-house/hooks/${item?.hookName}`)
+                                <div className={`hook-item ${item?.hookName == hookname && "active"}`} key={item?.hookName} onClick={() => {
+                                    navigate(`hooks/${item?.hookName}`)
                                 }}>
                                     <span className='dot'></span>
                                     <span>{item?.hookName}</span>
